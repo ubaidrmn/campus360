@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1045385729545",
+    "project_id": "campus360-df32e",
+    "storage_bucket": "campus360-df32e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045385729545:android:55ffd03da9817ade504ad8",
+        "android_client_info": {
+          "package_name": "com.exam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWfWCd8_PM8AWvBvkZcAE5NoyFi8ALjqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045385729545:android:8e5438f58cebd867504ad8",
+        "android_client_info": {
+          "package_name": "com.example.campus360"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWfWCd8_PM8AWvBvkZcAE5NoyFi8ALjqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
