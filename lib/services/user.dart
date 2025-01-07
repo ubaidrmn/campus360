@@ -1,9 +1,8 @@
-import 'package:campus360/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:get/get.dart';
 
 class UserService extends GetxController {
-  var firebaseUser = Rxn<fb_auth.User>();
+  var user = Rxn<fb_auth.User>();
   // final Rx<fb_auth.User?>
   // final Rx<User?> user = null.obs;
 
@@ -11,16 +10,17 @@ class UserService extends GetxController {
 
     fb_auth.FirebaseAuth.instance
     .authStateChanges()
-    .listen((fb_auth.User? user) {
-      print(user);
+    .listen((fb_auth.User? _user) {
       if (user != null) {
-        firebaseUser.value = user;
+        print("THIS IS IT");
+        print(_user?.photoURL);
+        user.value = _user;
       }
     });
 
-    ever(firebaseUser, (user) {
+    ever(user, (_user) {
       if (user != null) {
-        Get.offAllNamed('/feed');
+        Get.offAllNamed('/authenticated-screen');
       } else {
         Get.offAllNamed('/login');
       }
@@ -33,7 +33,7 @@ class UserService extends GetxController {
       password: password,
     );
 
-    this.firebaseUser.value = credential.user;
+    user.value = credential.user;
 
     return credential;
   }
@@ -44,7 +44,7 @@ class UserService extends GetxController {
       password: password,
     );
 
-    this.firebaseUser.value = credential.user;
+    user.value = credential.user;
 
     return credential;
   }

@@ -1,5 +1,5 @@
 import 'package:campus360/firebase_options.dart';
-import 'package:campus360/screens/feed.dart';
+import 'package:campus360/screens/authenticated.dart';
 import 'package:campus360/screens/login.dart';
 import 'package:campus360/screens/register.dart';
 import 'package:campus360/services/post.dart';
@@ -7,6 +7,8 @@ import 'package:campus360/services/user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+// flutter run -d chrome --web-renderer html
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
 
     return GetMaterialApp(
       getPages: [
-        GetPage(name: '/feed', page: () => FeedScreen()),
+        GetPage(name: '/authenticated-screen', page: () => AuthenticatedScreen()),
         GetPage(name: '/login', page: () => LoginScreen()),
         GetPage(name: '/register', page: () => RegisterScreen()),
       ],
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: "/login",
+      
     );
   }
 }
