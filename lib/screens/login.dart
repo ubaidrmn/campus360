@@ -21,7 +21,6 @@ class LoginScreen extends StatelessWidget {
           Padding(padding: EdgeInsets.only(top: 10), child: ElevatedButton(onPressed: () async {
             try {
               await userService.login(emailController.text, passwordController.text);
-              Get.offNamed("/feed");
             } catch (e) {
               _dialogBuilder(context, "Error", e.toString());
             }

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController displayNameController = TextEditingController();
   late UserService userService = Get.find();
 
   RegisterScreen({ super.key });
@@ -17,13 +18,15 @@ class RegisterScreen extends StatelessWidget {
           TextField(controller: emailController, decoration: InputDecoration(
             hintText: "Email"
           ),),
+          TextField(controller: displayNameController, decoration: InputDecoration(
+            hintText: "Display Name"
+          ),),
           TextField(controller: passwordController, obscureText: true, decoration: InputDecoration(
             hintText: "Password",
           ),),
           Padding(padding: EdgeInsets.only(top: 10), child: ElevatedButton(onPressed: () async {
             try {
-              await userService.register(emailController.text, passwordController.text);
-              Get.offNamed("/feed");
+              await userService.register(emailController.text, passwordController.text, displayNameController.text);
             } on FirebaseAuthException catch (e) {
               if (e.code == 'weak-password') {
                 _dialogBuilder(context, "Error", "The password provided is too weak");

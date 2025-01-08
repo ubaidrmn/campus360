@@ -1,39 +1,49 @@
+import 'dart:collection';
+
+import 'package:campus360/models/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:get/get.dart';
 
 class UserService extends GetxController {
-  var user = Rxn<fb_auth.User>();
-  // final Rx<fb_auth.User?>
-  // final Rx<User?> user = null.obs;
+  var firebaseUser = Rxn<fb_auth.User>();
+  var user = Rxn<User>();
+
+  final db = FirebaseFirestore.instance;
 
   void setupListener() {
 
     fb_auth.FirebaseAuth.instance
     .authStateChanges()
-    .listen((fb_auth.User? _user) {
-      if (user != null) {
-        print("THIS IS IT");
-        print(_user?.photoURL);
-        user.value = _user;
-      }
-    });
+    .listen((fb_auth.User? authenticatedFirebaseUser) {
 
-    ever(user, (_user) {
-      if (user != null) {
-        Get.offAllNamed('/authenticated-screen');
+      if (authenticatedFirebaseUser != null) {
+        firebaseUser.value = authenticatedFirebaseUser;
+        db.collection("User").where("uid", isEqualTo: authenticatedFirebaseUser.uid).get().then((value) {
+          var userData = value.docs[0].data();
+          user.value = User.fromMap(userData);
+          Get.offAllNamed('/authenticated-screen');
+        });
       } else {
         Get.offAllNamed('/login');
       }
+
     });
   }
 
-  Future<fb_auth.UserCredential> register(String email, String password) async {
+  Future<fb_auth.UserCredential> register(String email, String password, String displayName) async {
     var credential = await fb_auth.FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    user.value = credential.user;
+    if (credential.user?.uid != null) {
+      user.value = User(displayName: displayName, email: email, uid: credential.user!.uid);
+      var userData = user.value?.getDictionary();
+      await db.collection("User").add(userData);
+      firebaseUser.value = credential.user;
+      Get.offNamed("/authenticated-screen");
+    }
 
     return credential;
   }
@@ -43,8 +53,6 @@ class UserService extends GetxController {
       email: email,
       password: password,
     );
-
-    user.value = credential.user;
 
     return credential;
   }

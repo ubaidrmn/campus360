@@ -2,6 +2,7 @@ import 'package:campus360/screens/create.dart';
 import 'package:campus360/screens/feed.dart';
 import 'package:campus360/screens/profile.dart';
 import 'package:campus360/services/user.dart';
+import 'package:campus360/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -41,7 +42,7 @@ class _AuthenticatedScreenState extends State<AuthenticatedScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(child: Padding(padding: EdgeInsets.only(top: 4, left: 25, right: 25), child: Icon(Icons.home, size: 35,)), onTap: () {
+                  GestureDetector(child: Padding(padding: EdgeInsets.only(top: 4, left: 25, right: 25), child: Icon(Icons.home, size: 40,)), onTap: () {
                     setState(() {
                       activeScreen = FeedScreen();
                       activeScreenTitle = "Home";
@@ -50,14 +51,16 @@ class _AuthenticatedScreenState extends State<AuthenticatedScreen> {
                   GestureDetector(child: Padding(padding: EdgeInsets.only(top: 4, left: 25, right: 25), child: Container(
                     decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: Colors.lightBlueAccent, width: 2.5)
                   ),
-                    child: Image(
-                    height: 30,
-                    width: 30,
-                    image: NetworkImage(userService.user.value?.photoURL ?? "https://icon-library.com/images/avatar-icon-png/avatar-icon-png-15.jpg", 
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image(
+                      height: 40,
+                      width: 40,
+                      image: NetworkImage(defaultUserImageUrl, 
                   ),
                   ),
+                    ),
                   )), onTap: () {
                     setState(() {
                       activeScreen = ProfileScreen();

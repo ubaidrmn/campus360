@@ -1,8 +1,20 @@
 class User {
-  String firstName;
-  String lastName;
+  String displayName;
   String email;
+  String uid;
 
-  User ({ required this.firstName, required this.lastName, required this.email });
+  User ({ required this.displayName, required this.uid, required this.email });
+  
+  factory User.fromMap(map) {
+    return User(displayName: map["displayName"], email: map["email"], uid: map["uid"]);
+  }
+
+  getDictionary() {
+    return <String, dynamic>{
+      "displayName": displayName,
+      "email": email,
+      "uid": uid,
+    }; 
+  }
 
 }

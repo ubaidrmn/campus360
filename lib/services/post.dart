@@ -1,20 +1,22 @@
 import 'package:campus360/models/post.dart';
+import 'package:campus360/services/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class PostService extends GetxController {
+  UserService userService = Get.find();
   var posts = [].obs;
   final db = FirebaseFirestore.instance;
 
   fetchPosts() {
-    db.collection("Post").snapshots().listen((snapshot) {
+    db.collection("Post").get().then((snapshot) {
+      // snapshots().listen((snapshot) {})
       posts.value = [];
       for (var doc in snapshot.docs) {
-        var data = doc.data();
-        posts.add(Post(
-            title: data["title"],
-            description: data["description"],
-            path: doc.id));
+        if (doc.data()["uid"] != null) {
+          Post post = Post.fromDoc(doc);
+          posts.add(post);
+        }
       }
     });
   }
