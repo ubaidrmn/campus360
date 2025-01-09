@@ -16,6 +16,7 @@ class UserService extends GetxController {
     fb_auth.FirebaseAuth.instance
     .authStateChanges()
     .listen((fb_auth.User? authenticatedFirebaseUser) {
+      print(authenticatedFirebaseUser);
 
       if (authenticatedFirebaseUser != null) {
         firebaseUser.value = authenticatedFirebaseUser;
@@ -38,7 +39,7 @@ class UserService extends GetxController {
     );
 
     if (credential.user?.uid != null) {
-      user.value = User(displayName: displayName, email: email, uid: credential.user!.uid);
+      user.value = User(displayName: displayName, email: email, uid: credential.user!.uid, likedPosts: []);
       var userData = user.value?.getDictionary();
       await db.collection("User").add(userData);
       firebaseUser.value = credential.user;
@@ -61,4 +62,10 @@ class UserService extends GetxController {
     return fb_auth.FirebaseAuth.instance.signOut();
   }
 
+  Future<void> updateLikedPosts(newLikedPosts) {
+    return db.collection("User").where("uid", isEqualTo: user.value?.uid).get().then((value) async {
+      user.value?.likedPosts = newLikedPosts;
+      await db.collection("User").doc(value.docs[0].id).update({"likedPosts": newLikedPosts});
+    });
+  }
 }

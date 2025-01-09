@@ -1,5 +1,4 @@
 import 'package:campus360/services/user.dart';
-import 'package:campus360/shared/widgets/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -14,17 +13,43 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(title: "Register An Account", child: Padding(padding: EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center,children: [
-          TextField(controller: emailController, decoration: InputDecoration(
-            hintText: "Email"
+    return Scaffold(
+      body: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("auth_bg.jpg"),
+            fit: BoxFit.cover
+          ) 
+        ),
+        child: Padding(padding: EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center,children: [
+          Padding(child: Text("Campus360 Register", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),), padding: EdgeInsets.only(bottom: 20),),
+          TextField(controller: emailController, style: TextStyle(
+            color: Colors.white,
+          ), decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
+            hintText: "Email",
+            prefixIconColor: Colors.white,
+            prefixIcon: Icon(Icons.person)
           ),),
-          TextField(controller: displayNameController, decoration: InputDecoration(
-            hintText: "Display Name"
+          TextField(controller: displayNameController, style: TextStyle(
+            color: Colors.white,
+          ), decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
+            hintText: "Display Name",
+            prefixIconColor: Colors.white,
+            prefixIcon: Icon(Icons.person)
           ),),
-          TextField(controller: passwordController, obscureText: true, decoration: InputDecoration(
+          TextField(controller: passwordController, obscureText: true, style: TextStyle(
+            color: Colors.white,
+          ), decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
             hintText: "Password",
+            prefixIconColor: Colors.white,
+            prefixIcon: Icon(Icons.person)
           ),),
-          Padding(padding: EdgeInsets.only(top: 10), child: ElevatedButton(onPressed: () async {
+          Padding(padding: EdgeInsets.only(top: 20), child: ElevatedButton(onPressed: () async {
             try {
               await userService.register(emailController.text, passwordController.text, displayNameController.text);
             } on FirebaseAuthException catch (e) {
@@ -37,10 +62,12 @@ class RegisterScreen extends StatelessWidget {
               _dialogBuilder(context, "Error", e.toString());
             }
           }, child: Text("Register"))),
-          Padding(padding: EdgeInsets.only(top: 10), child: GestureDetector(child: Text("Already have an account? Login now"), onTap: () {
-            Navigator.pushNamed(context, "/login");
+          Padding(padding: EdgeInsets.only(top: 20), child: GestureDetector(child: Text("Already have an account? Login now", style: TextStyle(color: Colors.white),), onTap: () {
+            Get.offNamed("/login");
           },),)
-        ],)));
+        ],))
+      ),
+    );
   }
 
   Future<void> _dialogBuilder(BuildContext context, String title, String text) {

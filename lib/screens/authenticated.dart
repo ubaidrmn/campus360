@@ -18,6 +18,13 @@ class _AuthenticatedScreenState extends State<AuthenticatedScreen> {
   Widget activeScreen = FeedScreen();
   String activeScreenTitle = "Home";
 
+  void goBackToHome() {
+    setState(() {
+      activeScreen = FeedScreen();
+      activeScreenTitle = "Home";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +82,7 @@ class _AuthenticatedScreenState extends State<AuthenticatedScreen> {
                     ),
                   )), onTap: () {
                     setState(() {
-                      activeScreen = CreateScreen();
+                      activeScreen = CreateScreen(goBackToHome: goBackToHome);
                       activeScreenTitle = "Create";
                     });
                   },)

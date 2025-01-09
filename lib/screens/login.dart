@@ -1,7 +1,5 @@
 import 'package:campus360/services/user.dart';
-import 'package:campus360/shared/widgets/base_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -11,24 +9,48 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(title: "Login", child: Padding(padding: EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center,children: [
-          TextField(controller: emailController, decoration: InputDecoration(
-            hintText: "Email"
+
+    return Scaffold(
+      body: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("auth_bg.jpg"),
+            fit: BoxFit.cover
+          ) 
+        ),
+        child: Padding(padding: EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center,children: [
+          Padding(child: Text("Campus360 Login", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),), padding: EdgeInsets.only(bottom: 20),),
+          TextField(controller: emailController, style: TextStyle(
+            color: Colors.white,
+          ), decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
+            hintText: "Email Address",
+            prefixIconColor: Colors.white,
+            prefixIcon: Icon(Icons.person)
           ),),
-          TextField(controller: passwordController, obscureText: true, decoration: InputDecoration(
+          TextField(controller: passwordController, obscureText: true, style: TextStyle(
+            color: Colors.white,
+          ), decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.white),
             hintText: "Password",
+            prefixIconColor: Colors.white,
+            prefixIcon: Icon(Icons.security)
           ),),
-          Padding(padding: EdgeInsets.only(top: 10), child: ElevatedButton(onPressed: () async {
+          Padding(padding: EdgeInsets.only(top: 20), child: ElevatedButton(onPressed: () async {
             try {
               await userService.login(emailController.text, passwordController.text);
             } catch (e) {
               _dialogBuilder(context, "Error", e.toString());
             }
           }, child: Text("Login"))),
-          Padding(padding: EdgeInsets.only(top: 10), child: GestureDetector(child: Text("Don't have an account? Register now"), onTap: () {
+          Padding(padding: EdgeInsets.only(top: 20), child: GestureDetector(child: Text("Don't have an account? Register now", style: TextStyle(color: Colors.white)), onTap: () {
             Get.offNamed("/register");
           },),)
-        ],)));
+        ],))
+      ),
+    );
   }
 
   Future<void> _dialogBuilder(BuildContext context, String title, String text) {

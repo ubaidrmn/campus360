@@ -6,10 +6,18 @@ import 'package:get/get.dart';
 class PostService extends GetxController {
   UserService userService = Get.find();
   var posts = [].obs;
+  var postsLikedByUser = [].obs;
   final db = FirebaseFirestore.instance;
 
   fetchPosts() {
-    db.collection("Post").get().then((snapshot) {
+    db.collection("UserPostLike").where("uid", isEqualTo: userService.user.value?.uid).get().then((snapshot) {
+      postsLikedByUser.value = [];
+      for (var doc in snapshot.docs) {
+        postsLikedByUser.add(doc.data()["postId"]);
+      }
+    });
+
+    db.collection("Post").snapshots().listen((snapshot) {
       // snapshots().listen((snapshot) {})
       posts.value = [];
       for (var doc in snapshot.docs) {
@@ -27,5 +35,24 @@ class PostService extends GetxController {
 
   editPost(String docPath, Post nPostewPost) {
     // data = db.collection("Post").doc(docPath).update(data);
+  }
+
+  handlePostLikeClick(String docPath) async {
+    if (userService.user.value?.likedPosts.contains(docPath) == true) {
+      print("FOUND LIKE");
+      var newLikedPosts = userService.user.value!.likedPosts;
+      newLikedPosts.remove(docPath);
+      await userService.updateLikedPosts(newLikedPosts);
+      await db.collection("Post").doc(docPath).update({
+        "totalLikes": FieldValue.increment(-1),
+      });
+    } else {
+      print("FOUND NO LIKE");
+      print([...userService.user.value!.likedPosts, docPath]);
+      await userService.updateLikedPosts([...userService.user.value!.likedPosts, docPath]);
+      await db.collection("Post").doc(docPath).update({
+        "totalLikes": FieldValue.increment(1),
+      });
+    }
   }
 }

@@ -9,8 +9,9 @@ class PostCard extends StatelessWidget {
   final PostService postService = Get.find();
   final UserService userService = Get.find();
   final int index;
+  final bool detail;
 
-  PostCard({ required this.index });
+  PostCard({ required this.index, this.detail = false });
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,15 @@ class PostCard extends StatelessWidget {
     return Card(
       elevation: 1,
       borderOnForeground: true,
+      color: index % 2 == 0 ? Colors.grey[300] : Colors.white,
       child: Padding(
         padding: EdgeInsets.all(15),
         child: Column(
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
+            Text("Date Posted ${post.createdAt.toString().substring(0, 10)}"),
             Row(
               spacing: 10,
               children: [ClipRRect(
@@ -46,29 +50,44 @@ class PostCard extends StatelessWidget {
                   fontSize: 25, fontWeight: FontWeight.bold),
             ),
             Text(post.description),
-            post.uid == userService.user.value?.uid ? Row(spacing: 10,children: [
+
+            // Like and Comment buttons
+
+            Row(
+              children: [
+                Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    IconButton(onPressed: () {
+                      postService.handlePostLikeClick(post.path);
+                    }, icon: Icon(Icons.thumb_up, color: userService.user.value?.likedPosts.contains(post.path) == true ? Colors.blueAccent : Colors.grey[800],)),
+                    Text(post.totalLikes.toString()),
+                  ],
+                ),
+                Flex(direction: Axis.horizontal, children: [
+                  IconButton(onPressed: () {
+                  Get.offNamed("/post-thread", arguments: [index]);
+                }, icon: Icon(Icons.comment)),
+                ],),
+              ],
+            ),
+
+            // Delete and Edit buttons
+            !detail && post.uid == userService.user.value?.uid ? Row(spacing: 10,children: [
               ElevatedButton(
                 onPressed: () {
                   postService
                       .deletePost(post.path);
                 },
                 child: Text("Delete")),
-            ElevatedButton(
-            onPressed: () {
-              // postService
-              //     .editPost(postService.posts[index].path);
-            },
-            child: Text("Edit"))
-            ],) : Row(
-              children: [
-                IconButton(onPressed: () {
-
-                }, icon: Icon(Icons.favorite)),
-                IconButton(onPressed: () {
-
-                }, icon: Icon(Icons.comment)),
-              ],
-            ),
+            // ElevatedButton(
+            // onPressed: () {
+            //   // postService
+            //   // .editPost(postService.posts[index].path);
+            //   Get.offNamed("/post-thread", arguments: [index]);
+            // },
+            // child: Text("Edit"))
+            ],) : Container(),
           ],
         ),
       ),

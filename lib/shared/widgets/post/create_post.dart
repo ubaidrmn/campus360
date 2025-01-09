@@ -8,22 +8,26 @@ class CreateNewPost extends StatelessWidget {
   final UserService userService = Get.find();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  final Function goBackToHome;
+
+  CreateNewPost({required this.goBackToHome});
+
   
   publishPost() {
     final post = <String, dynamic>{
       "title": titleController.text,
       "description": descriptionController.text,
       "displayName": userService.user.value?.displayName,
-      "uid": userService.user.value?.uid
+      "uid": userService.user.value?.uid,
+      "createdAt": DateTime.now(),
+      "totalLikes": 0
     };
-
-    print("LOOK ");
-    print(post);
 
     db.collection("Post").add(post).then((DocumentReference doc) {
       print("${doc.id} Post Created..");
       titleController.text = "";
       descriptionController.text = "";
+      goBackToHome();
     });
   }
 
